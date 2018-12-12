@@ -1,2 +1,2 @@
 - name: Install local dependencies
-  local_action: command yum -y install pyvmomi
+  local_action: command yum -y install python2-pyvmomi
