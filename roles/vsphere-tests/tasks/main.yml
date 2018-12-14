@@ -1,14 +1,18 @@
 - name: Install local dependencies
   local_action: command yum -y install python2-pyvmomi
 
+- debug: 
+    msg: "were creating a VM for {{ item }}"
+  with_items:  "{{ groups['all'] }}" 
+
 - name: Create a virtual machine on given ESXi hostname
   vmware_guest:
-    hostname: "192.168.40.13"
+    hostname: "192.168.2.2"
     username: "jap680@id.uib.es"
     password: "dddfdffg"
     validate_certs: no
     folder: /DC1/vm/
-    name: test_vm_0001
+    name: test_vm_0001_{{ item }}
     state: poweredon
     guest_id: centos64Guest
     # This is hostname of particular ESXi server on which user wants VM to be deployed
@@ -30,4 +34,4 @@
     wait_for_ip_address: yes
   delegate_to: localhost
   register: deploy_vm
-
+  with_items:  "{{ groups['all'] }}"
