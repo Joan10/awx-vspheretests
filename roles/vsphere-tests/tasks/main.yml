@@ -1,6 +1,34 @@
 #- name: Include passwords from secret.yaml
 #  include_vars: secret.yml
 
+- name: Print some debug information 
+  vars: 
+    msg: |
+        Module Variables ("vars"):
+        --------------------------------
+        {{ vars | to_nice_json }} 
+ 
+        Environment Variables ("environment"):
+        --------------------------------
+        {{ environment | to_nice_json }} 
+ 
+        GROUP NAMES Variables ("group_names"):
+        --------------------------------
+        {{ group_names | to_nice_json }}
+ 
+        GROUPS Variables ("groups"):
+        --------------------------------
+        {{ groups | to_nice_json }}
+ 
+        HOST Variables ("hostvars"):
+        --------------------------------
+        {{ hostvars | to_nice_json }} 
+ 
+  debug: 
+    msg: "{{ msg.split('\n') }}"       
+  tags: debug_info
+
+
 - name: Install local dependencies
   local_action: command yum -y install python2-pyvmomi
   tags:
