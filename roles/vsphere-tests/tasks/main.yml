@@ -1,37 +1,48 @@
+- name: Include passwords from secret.yaml
+  include_vars: secret.yml
+
 - name: Install local dependencies
   local_action: command yum -y install python2-pyvmomi
+  tags:
+    - dep
 
-- debug: 
-    msg: "were creating a VM for {{ item }}"
-  with_items:  "{{ groups['all'] }}" 
 
-- name: Create a virtual machine on given ESXi hostname
+- name: Clone a virtual machine from Template and customize
   vmware_guest:
-    hostname: "192.168.2.2"
-    username: "jap680@id.uib.es"
-    password: "dddfdffg"
-    validate_certs: no
-    folder: /DC1/vm/
-    name: test_vm_0001_{{ item }}
-    state: poweredon
-    guest_id: centos64Guest
-    # This is hostname of particular ESXi server on which user wants VM to be deployed
-    esxi_hostname: "dfdfdff"
-    disk:
-    - size_gb: 10
-      type: thin
-      datastore: datastore1
-    hardware:
-      memory_mb: 512
-      num_cpus: 4
-      scsi: paravirtual
+    hostname: "{{ VMWARE_HOST }}"
+    username: "{{ VMWARE_USER }}"
+    password: "{{ VMWARE_PASSWORD }}"
+    validate_certs: False
+    datacenter: "{{ VMWARE_DATACENTER }}"
+    cluster: "{{ VMWARE_CLUSTER }}"
+    name: "{{ VMWARE_NAME }}"
+    template: "{{ VMWARE_TEMPLATE }}"
+    folder: "{{ VMWARE_FOLDER }}"
     networks:
-    - name: VM Network
-      mac: aa:bb:dd:aa:00:14
-      ip: 10.10.10.100
-      netmask: 255.255.255.0
-      device_type: vmxnet3
-    wait_for_ip_address: yes
+    - name: "{{ VMWARE_NETWORK }}"
+      ip: "{{ VMWARE_IP }}"
+      netmask: "{{ VMWARE_NETMASK }}"
+      gateway: "{{ VMWARE_GATEWAY }}"
+#      device_type: vmxnet3
+      dns_servers:
+      - "{{ VMWARE_DNS1 }}"
+      - "{{ VMWARE_DNS2 }}"
   delegate_to: localhost
-  register: deploy_vm
-  with_items:  "{{ groups['all'] }}"
+  tags:
+    - vsphere
+    - create
+
+- name: Move Virtual Machine
+  vmware_guest_move:
+    hostname: "{{ VMWARE_HOST }}"
+    username: "{{ VMWARE_USER }}"
+    password: "{{ VMWARE_PASSWORD }}"
+    datacenter: "{{ VMWARE_DATACENTER }}"
+    validate_certs: no
+    name: "{{ VMWARE_NAME }}"
+    dest_folder: "{{ VMWARE_DESTFOLDER }}"
+  delegate_to: localhost
+  register: facts
+  tags:
+    - vsphere
+    - move
