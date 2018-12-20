@@ -26,7 +26,6 @@
 #      device_type: vmxnet3
       dns_servers:
       - "{{ VMWARE_DNS1 }}"
-      - "{{ VMWARE_DNS2 }}"
   delegate_to: localhost
   tags:
     - vsphere
