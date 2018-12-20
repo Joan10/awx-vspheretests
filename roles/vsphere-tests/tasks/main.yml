@@ -37,9 +37,9 @@
 
 - name: Clone a virtual machine from Template and customize
   vmware_guest:
-    hostname: {{ lookup("env", "VMWARE_HOST") }}
-    username: {{ lookup("env", " VMWARE_USER") }}
-    password: {{ lookup("env", " VMWARE_PASSWORD") }}
+    hostname: "{{ lookup('env', 'VMWARE_HOST') }}"
+    username: "{{ lookup('env', 'VMWARE_USER') }}"
+    password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
     validate_certs: False
     datacenter: "{{ VMWARE_DATACENTER }}"
     cluster: "{{ VMWARE_CLUSTER }}"
@@ -62,9 +62,9 @@
 
 - name: Move Virtual Machine
   vmware_guest_move:
-    hostname: {{ lookup("env", "VMWARE_HOST") }}
-    username: {{ lookup("env", " VMWARE_USER") }}
-    password: {{ lookup("env", " VMWARE_PASSWORD") }}
+    hostname: "{{ lookup('env', 'VMWARE_HOST') }}"
+    username: "{{ lookup('env', 'VMWARE_USER') }}"
+    password: "{{ lookup('env', 'VMWARE_PASSWORD') }}"
     datacenter: "{{ VMWARE_DATACENTER }}"
     validate_certs: no
     name: "{{ VMWARE_NAME }}"
