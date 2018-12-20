@@ -1,5 +1,5 @@
-- name: Include passwords from secret.yaml
-  include_vars: secret.yml
+#- name: Include passwords from secret.yaml
+#  include_vars: secret.yml
 
 - name: Install local dependencies
   local_action: command yum -y install python2-pyvmomi
